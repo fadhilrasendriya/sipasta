@@ -1,13 +1,12 @@
 import {
-  Text,
-  Heading,
-  Button,
   useColorMode,
-  VStack,
-  Center,
+  Flex,
+  Spacer,
+  Box,
 } from "@chakra-ui/react";
 import { githubLight, githubDark } from "@uiw/codemirror-theme-github";
 import { CodeEditor } from "src/components/CodeEditor";
+import { NavBar } from "src/components/NavBar";
 
 const code = `## Title
 
@@ -37,22 +36,19 @@ func main() {
 export default function Home() {
   const { colorMode, toggleColorMode } = useColorMode();
   return (
-    <Center h="100vh">
-      <VStack spacing={4}>
-        <Heading>SiPasta is Working on It</Heading>
-        <Text fontSize="xl" textAlign="center" mx={4}>
-          SiPasta is a lightweight, open-source, and free alternative to the
-          popular Pastebin service.
-        </Text>
-        <Button onClick={toggleColorMode}>
-          Toggle {colorMode === "light" ? "Dark" : "Light"} Mode
-        </Button>
+    <Flex h="100vh" w="100vw">
+      <NavBar />
+        <Box flex={1} style={{
+          overflow: 'auto',
+        }
+        }>
         <CodeEditor
           value={code}
-          height="200px"
-          theme={colorMode === "light" ? githubLight : githubDark}
+          width="100%"
+          height="100vh"
+          viewMode={colorMode}
         />
-      </VStack>
-    </Center>
+        </Box>
+    </Flex>
   );
 }
