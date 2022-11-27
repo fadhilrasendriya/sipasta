@@ -2,7 +2,6 @@ import { useColorMode, Flex, Box, useEditable } from "@chakra-ui/react";
 import { CodeEditorProvider } from "src/contexts/CodeEditorContext";
 import { CodeEditor } from "src/components/CodeEditor";
 import { NavBar } from "src/components/NavBar";
-import { useEffect } from "react";
 
 export async function getServerSideProps(context) {
   const { pasteId } = context.query;
@@ -19,8 +18,6 @@ export async function getServerSideProps(context) {
     },
   };
 }
-
-
 
 export default function Home({data}) {
   const { colorMode } = useColorMode();
