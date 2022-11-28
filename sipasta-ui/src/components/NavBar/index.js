@@ -19,6 +19,7 @@ export const NavBarContext = createContext();
 export const NavBar = ({ isNew }) => {
   const { colorMode, toggleColorMode } = useColorMode();
   const { value } = useCodeEditorContext();
+  const [ getId, setId ] = useState("");
   const [isSaveLoading, setIsSaveLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
@@ -30,13 +31,15 @@ export const NavBar = ({ isNew }) => {
   const createNewPaste = async () => {
     setIsSaveLoading(true);
     const res = await fetch(
-      `${process.env.BACKEND_URL}/api/collections/paste/records`,
+      `${process.env.BACKEND_URL}/api/texts/create`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "authorization" : localStorage.getItem("authorization")
         },
         body: JSON.stringify({
+          id: getId,
           text: value,
         }),
       }
@@ -55,6 +58,7 @@ export const NavBar = ({ isNew }) => {
   };
 
   return (
+    <>
     <NavBarContext.Provider value={isOpen}>
       <Flex
         direction="column"
@@ -108,5 +112,6 @@ export const NavBar = ({ isNew }) => {
         </VStack>
       </Flex>
     </NavBarContext.Provider>
+    </>
   );
 };

@@ -11,7 +11,6 @@ exports.up = pgm => {
         },
         user_id: {
             type: 'varchar(50)',
-            notNull: true,
           },
         text: {
             type: 'text',
