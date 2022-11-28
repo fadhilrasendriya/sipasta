@@ -38,12 +38,7 @@ export const NavBarContext = createContext();
 export const NavBar = ({ isNew }) => {
   const { colorMode, toggleColorMode } = useColorMode();
   const { value } = useCodeEditorContext();
-<<<<<<< HEAD
-  const [getId, setId] = useState();
-  const { isOpen, onOpen, onClose } = useDisclosure();
-=======
   const [ getId, setId ] = useState("");
->>>>>>> 0fdca99216090c19a8be5363856d53006417b86e
   const [isSaveLoading, setIsSaveLoading] = useState(false);
   const [isOpened, setisOpened] = useState(false);
   const router = useRouter();
@@ -69,45 +64,6 @@ export const NavBar = ({ isNew }) => {
 
   const createNewPaste = async () => {
     setIsSaveLoading(true);
-<<<<<<< HEAD
-    try {
-      const res = await fetch(
-        `${process.env.BACKEND_URL}/api/texts/create`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "authorization" : getToken(),
-          },
-          body: JSON.stringify({
-            id: getId,
-            text: value,
-          }),
-        }
-      )
-      const data = await res.json();
-      toast({
-        title: 'Pasta Saved',
-        position: 'top-right',
-        description: "Your pasta has been saved",
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      })
-      router.push(`/${data.id}`);
-
-    } catch (error) {
-      toast({
-        title: 'Pasta Save Failed',
-        position: 'top-right',
-        description: error.message,
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      })
-    }
-    setIsSaveLoading(false);
-=======
     const res = await fetch(
       `${process.env.BACKEND_URL}/api/texts/create`,
       {
@@ -124,7 +80,6 @@ export const NavBar = ({ isNew }) => {
     );
     const data = await res.json();
     router.push(`/${data.id}`);
->>>>>>> 0fdca99216090c19a8be5363856d53006417b86e
   };
 
   const moveToHomeWithExistingPaste = () => {
@@ -141,19 +96,6 @@ export const NavBar = ({ isNew }) => {
 
   return (
     <>
-<<<<<<< HEAD
-      <NavBarContext.Provider value={isOpened}>
-        <Flex
-          direction="column"
-          p={1}
-          bg="Menu"
-          h="100%"
-          style={{
-            width: isOpened ? "250px" : "56px",
-            transition: "width 0.25s",
-          }}
-        >
-=======
     <NavBarContext.Provider value={isOpen}>
       <Flex
         direction="column"
@@ -173,7 +115,6 @@ export const NavBar = ({ isNew }) => {
             SiPasta
           </NavigationButton>
           <Divider />
->>>>>>> 0fdca99216090c19a8be5363856d53006417b86e
           <VStack spacing={1} align="stretch">
             <NavigationButton
               onClick={() => setisOpened(!isOpened)}
@@ -226,34 +167,6 @@ export const NavBar = ({ isNew }) => {
               {getToken() == null ? 'Login' : 'Logout'}
             </NavigationButton>
           </VStack>
-<<<<<<< HEAD
-        </Flex>
-      </NavBarContext.Provider>
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Save Your Pasta</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Input
-              value={getId}
-              onChange={(e) => setId(e.target.value)}
-              placeholder={
-                getToken() == null
-                  ? "Please Login to determine pasta name"
-                  : "Pasta Name"
-              }
-              disabled={getToken() == null}
-            />
-          </ModalBody>
-          <ModalFooter>
-            <Button colorScheme="teal" onClick={createNewPaste} isLoading={isSaveLoading} variant="ghost">
-              Save Pasta
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-=======
         </VStack>
         <Spacer />
         <VStack spacing={1} align="stretch">
@@ -268,7 +181,6 @@ export const NavBar = ({ isNew }) => {
         </VStack>
       </Flex>
     </NavBarContext.Provider>
->>>>>>> 0fdca99216090c19a8be5363856d53006417b86e
     </>
   );
 };
