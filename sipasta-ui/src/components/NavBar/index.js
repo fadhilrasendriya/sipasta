@@ -43,6 +43,14 @@ export const NavBar = ({ isNew, data, setIsNew }) => {
       }
     );
     const data = await res.json();
+    toast({
+      title: 'New Paste Saved',
+      description: "We've created your paste for you.",
+      status: 'success',
+      position: 'top-right',
+      duration: 3000,
+      isClosable: true,
+    })
     router.push(`/${data.id}`);
   };
 
