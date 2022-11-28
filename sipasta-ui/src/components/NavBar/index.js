@@ -1,4 +1,4 @@
-import { VStack, Flex, Spacer, Divider, useColorMode, useToast } from "@chakra-ui/react";
+import { VStack, Flex, Spacer, Divider, useColorMode } from "@chakra-ui/react";
 import {
   MdPostAdd,
   MdMenu,
@@ -16,13 +16,12 @@ import { useCodeEditorContext } from "src/contexts/CodeEditorContext";
 // export context to check navbar state and useState
 export const NavBarContext = createContext();
 
-export const NavBar = ({ isNew, data, setIsNew }) => {
+export const NavBar = ({ isNew }) => {
   const { colorMode, toggleColorMode } = useColorMode();
   const { value } = useCodeEditorContext();
   const [isSaveLoading, setIsSaveLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-  const toast = useToast();
 
   const moveToHome = () => {
     router.push("/");
@@ -43,41 +42,16 @@ export const NavBar = ({ isNew, data, setIsNew }) => {
       }
     );
     const data = await res.json();
-    toast({
-      title: 'New Paste Saved',
-      description: "We've created your paste for you.",
-      status: 'success',
-      position: 'top-right',
-      duration: 3000,
-      isClosable: true,
-    })
     router.push(`/${data.id}`);
   };
 
-  const savePaste = async () => {
-    setIsSaveLoading(true);
-    const res = await fetch(
-      `${process.env.BACKEND_URL}/api/collections/paste/records/${data.id}`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          text: value,
-        }),
-      }
-    )
-    setIsSaveLoading(false);
-    setIsNew(false);
-    toast({
-      title: 'Paste Saved',
-      description: "We've updated your paste for you.",
-      status: 'success',
-      position: 'top-right',
-      duration: 3000,
-      isClosable: true,
-    })
+  const moveToHomeWithExistingPaste = () => {
+    router.push({
+      pathname: "/",
+      query: {
+        pasteValue: value,
+      },
+    }, "/");
   };
 
   return (
@@ -104,7 +78,7 @@ export const NavBar = ({ isNew, data, setIsNew }) => {
             <NavigationButton
               icon={<MdSave />}
               isDisabled={!isNew}
-              onClick={data?.id ? savePaste : createNewPaste}
+              onClick={createNewPaste}
               isLoading={isSaveLoading}
             >
               {" "}
@@ -114,9 +88,7 @@ export const NavBar = ({ isNew, data, setIsNew }) => {
               New Paste
             </NavigationButton>
             <NavigationButton icon={<MdEdit />} isDisabled={isNew} onClick={
-              () => {
-                setIsNew(!isNew);
-              }
+              isNew ? moveToHome : moveToHomeWithExistingPaste
             }>
               {" "}
               Edit Paste{" "}
