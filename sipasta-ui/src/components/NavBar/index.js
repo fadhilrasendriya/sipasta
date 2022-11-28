@@ -38,7 +38,8 @@ export const NavBarContext = createContext();
 export const NavBar = ({ isNew }) => {
   const { colorMode, toggleColorMode } = useColorMode();
   const { value } = useCodeEditorContext();
-  const [ getId, setId ] = useState("");
+  const [getId, setId] = useState();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [isSaveLoading, setIsSaveLoading] = useState(false);
   const [isOpened, setisOpened] = useState(false);
   const router = useRouter();
@@ -64,22 +65,43 @@ export const NavBar = ({ isNew }) => {
 
   const createNewPaste = async () => {
     setIsSaveLoading(true);
-    const res = await fetch(
-      `${process.env.BACKEND_URL}/api/texts/create`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "authorization" : localStorage.getItem("authorization")
-        },
-        body: JSON.stringify({
-          id: getId,
-          text: value,
-        }),
-      }
-    );
-    const data = await res.json();
-    router.push(`/${data.id}`);
+    try {
+      const res = await fetch(
+        `${process.env.BACKEND_URL}/api/texts/create`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "authorization" : getToken(),
+          },
+          body: JSON.stringify({
+            id: getId,
+            text: value,
+          }),
+        }
+      )
+      const data = await res.json();
+      toast({
+        title: 'Pasta Saved',
+        position: 'top-right',
+        description: "Your pasta has been saved",
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+      router.push(`/${data.id}`);
+
+    } catch (error) {
+      toast({
+        title: 'Pasta Save Failed',
+        position: 'top-right',
+        description: error.message,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+    setIsSaveLoading(false);
   };
 
   const moveToHomeWithExistingPaste = () => {
@@ -96,25 +118,17 @@ export const NavBar = ({ isNew }) => {
 
   return (
     <>
-    <NavBarContext.Provider value={isOpen}>
-      <Flex
-        direction="column"
-        p={1}
-        bg="Menu"
-        h="100%"
-        style={{
-          width: isOpen ? "250px" : "56px",
-          transition: "width 0.25s",
-        }}
-      >
-        <VStack spacing={1} align="stretch">
-          <NavigationButton
-            onClick={() => setIsOpen(!isOpen)}
-            icon={<MdMenu />}
-          >
-            SiPasta
-          </NavigationButton>
-          <Divider />
+      <NavBarContext.Provider value={isOpened}>
+        <Flex
+          direction="column"
+          p={1}
+          bg="Menu"
+          h="100%"
+          style={{
+            width: isOpened ? "250px" : "56px",
+            transition: "width 0.25s",
+          }}
+        >
           <VStack spacing={1} align="stretch">
             <NavigationButton
               onClick={() => setisOpened(!isOpened)}
@@ -167,20 +181,32 @@ export const NavBar = ({ isNew }) => {
               {getToken() == null ? 'Login' : 'Logout'}
             </NavigationButton>
           </VStack>
-        </VStack>
-        <Spacer />
-        <VStack spacing={1} align="stretch">
-          <NavigationButton
-            icon={colorMode === "dark" ? <MdLightMode /> : <MdDarkMode />}
-            onClick={toggleColorMode}
-          >
-            {" "}
-            {colorMode === "dark" ? "Light Mode" : "Dark Mode"}{" "}
-          </NavigationButton>
-          <NavigationButton icon={<MdLogin />}>Login</NavigationButton>
-        </VStack>
-      </Flex>
-    </NavBarContext.Provider>
+        </Flex>
+      </NavBarContext.Provider>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Save Your Pasta</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Input
+              value={getId}
+              onChange={(e) => setId(e.target.value)}
+              placeholder={
+                getToken() == null
+                  ? "Please Login to determine pasta name"
+                  : "Pasta Name"
+              }
+              disabled={getToken() == null}
+            />
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="teal" onClick={createNewPaste} isLoading={isSaveLoading} variant="ghost">
+              Save Pasta
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 };
