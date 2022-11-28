@@ -2,9 +2,9 @@ import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
-    projectId: "sipasta",
-    authDomain: "sipasta.firebaseapp.com",
-    apiKey: "AIzaSyA6_Q_OLEFzirQ9QvyA0saGbw7uDth83lw",
+    projectId: process.env.PROJECT_ID,
+    authDomain: process.env.AUTH_DOMAIN,
+    apiKey: process.env.API_KEY,
 };
 
 const app = initializeApp(firebaseConfig);
@@ -14,24 +14,15 @@ const auth = getAuth();
 
 export const accessTokenKey = "accessToken"
 
-export function signIn() {
-    signInWithPopup(auth, provider)
-        .then((result) => {
-            const credential = GoogleAuthProvider.credentialFromResult(result);
-            const token = credential.accessToken;
-            localStorage.setItem(accessTokenKey, token);
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+export async function signIn() {
+    const res = await signInWithPopup(auth, provider);
+    const credential = GoogleAuthProvider.credentialFromResult(res);
+    const token = credential.accessToken;
+    localStorage.setItem(accessTokenKey, token);
 }
 
 export function signOut() {
-    signOut(auth)
-        .then(() => {
-            localStorage.removeItem(accessTokenKey);
-        })
-        .catch((error) => {});
+    localStorage.removeItem(accessTokenKey);
 }
 
 export const getToken = () => {

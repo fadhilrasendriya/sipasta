@@ -5,7 +5,7 @@ import { NavBar } from "src/components/NavBar";
 
 export async function getServerSideProps(context) {
   const { pasteId } = context.query;
-  const res = await fetch(`${process.env.BACKEND_URL}/api/collections/paste/records/${pasteId}`);
+  const res = await fetch(`${process.env.BACKEND_URL}/api/texts/get?id=${pasteId}`);
   if (res.status === 404) {
     return {
       notFound: true,

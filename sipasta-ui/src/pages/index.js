@@ -2,11 +2,9 @@ import { useColorMode, Flex, Box } from "@chakra-ui/react";
 import { CodeEditorProvider } from "src/contexts/CodeEditorContext";
 import { CodeEditor } from "src/components/CodeEditor";
 import { NavBar } from "src/components/NavBar";
-import { useAuth } from "src/hooks/useAuth";
 import { useRouter } from "next/router";
 
 export default function Home() {
-  useAuth();
   const { colorMode } = useColorMode();
   const router = useRouter()
   const {
