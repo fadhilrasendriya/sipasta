@@ -25,6 +25,7 @@ const getTextById = (request, response) => {
     const userId = getUserId(request.headers['authorization']);
     if (userId === null) {
         response.status(401).json({'error': 'unauthorized'})
+        return
     }
     pool.query('SELECT * FROM texts WHERE id = $1', [id], (error, results) => {
         if (error) {
@@ -38,6 +39,7 @@ const createText = (request, response) => {
     const userId = getUserId(request.headers['authorization']);
     if (userId === null) {
         response.status(401).json({'error': 'unauthorized'})
+        return
     }
     const id = generateId(10);
 
@@ -57,6 +59,7 @@ const saveText = (request, response) => {
 
     if (userId === null) {
         response.status(401).json({'error': 'unauthorized'})
+        return
     }
 
     if (id) {
