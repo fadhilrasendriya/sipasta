@@ -14,12 +14,10 @@ import {
 import { FcGoogle } from "react-icons/fc";
 import { FaPaste } from "react-icons/fa";
 import { MdLightMode, MdDarkMode } from "react-icons/md";
-import { useState } from "react";
 import { signIn } from "src/utils/auth";
 
 export default function Login() {
   const { colorMode, toggleColorMode } = useColorMode();
-  const [token, setToken] = useState("");
   const color = colorMode === "light" ? "teal.600" : "teal.200";
   return (
     <Center h="100vh">
@@ -41,12 +39,11 @@ export default function Login() {
                 colorScheme="teal"
                 variant="ghost"
                 leftIcon={<FcGoogle />}
-                onClick={() => signIn(setToken)}
+                onClick={signIn}
               >
                 Sign in with Google
               </Button>
             </HStack>
-            <Container>{token}</Container>
           </VStack>
         </Center>
       </Box>

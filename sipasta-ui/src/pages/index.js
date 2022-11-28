@@ -1,12 +1,8 @@
-import {
-  useColorMode,
-  Flex,
-  Spacer,
-  Box,
-} from "@chakra-ui/react";
+import { useColorMode, Flex, Spacer, Box } from "@chakra-ui/react";
 import { githubLight, githubDark } from "@uiw/codemirror-theme-github";
 import { CodeEditor } from "src/components/CodeEditor";
 import { NavBar } from "src/components/NavBar";
+import { useAuth } from "src/hooks/useAuth";
 
 const code = `## Title
 
@@ -34,21 +30,24 @@ func main() {
 `;
 
 export default function Home() {
+  useAuth();
   const { colorMode, toggleColorMode } = useColorMode();
   return (
     <Flex h="100vh" w="100vw">
       <NavBar />
-        <Box flex={1} style={{
-          overflow: 'auto',
-        }
-        }>
+      <Box
+        flex={1}
+        style={{
+          overflow: "auto",
+        }}
+      >
         <CodeEditor
           value={code}
           width="100%"
           height="100vh"
           viewMode={colorMode}
-        />
-        </Box>
+        />{" "}
+      </Box>{" "}
     </Flex>
   );
 }

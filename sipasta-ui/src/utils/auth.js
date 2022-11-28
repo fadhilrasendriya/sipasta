@@ -12,25 +12,31 @@ const app = initializeApp(firebaseConfig);
 const provider = new GoogleAuthProvider();
 const auth = getAuth();
 
-export function signIn(setToken) {
+export const accessTokenKey = "accessToken"
+
+export function signIn() {
     signInWithPopup(auth, provider)
         .then((result) => {
             const credential = GoogleAuthProvider.credentialFromResult(result);
             const token = credential.accessToken;
-            localStorage.setItem("accessToken", token);
-            setToken(token);
-
+            localStorage.setItem(accessTokenKey, token);
         })
         .catch((error) => {
             console.log(error);
         });
 }
 
-export function signOut(setToken) {
+export function signOut() {
     signOut(auth)
         .then(() => {
-            localStorage.removeItem("accessToken");
-            setToken("");
+            localStorage.removeItem(accessTokenKey);
         })
         .catch((error) => {});
+}
+
+export const getToken = () => {
+    if (typeof window !== 'undefined') {
+        return localStorage.getItem(accessTokenKey);
+    }
+    return null;
 }
