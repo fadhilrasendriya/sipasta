@@ -1,53 +1,32 @@
-import { useColorMode, Flex, Spacer, Box } from "@chakra-ui/react";
-import { githubLight, githubDark } from "@uiw/codemirror-theme-github";
+import { useColorMode, Flex, Box } from "@chakra-ui/react";
+import { CodeEditorProvider } from "src/contexts/CodeEditorContext";
 import { CodeEditor } from "src/components/CodeEditor";
 import { NavBar } from "src/components/NavBar";
 import { useAuth } from "src/hooks/useAuth";
-
-const code = `## Title
-
-\`\`\`jsx
-function Demo() {
-  return <div>demo</div>
-}
-\`\`\`
-
-\`\`\`bash
-# Not dependent on uiw.
-npm install @codemirror/lang-markdown --save
-npm install @codemirror/language-data --save
-\`\`\`
-
-[weisit ulr](https://uiwjs.github.io/react-codemirror/)
-
-\`\`\`go
-package main
-import "fmt"
-func main() {
-  fmt.Println("Hello, 世界")
-}
-\`\`\`
-`;
+import { useRouter } from "next/router";
 
 export default function Home() {
   useAuth();
-  const { colorMode, toggleColorMode } = useColorMode();
+  const { colorMode } = useColorMode();
+  const router = useRouter()
+  const {
+    query: { 
+      pasteValue,
+     },
+  } = router
   return (
-    <Flex h="100vh" w="100vw">
-      <NavBar />
-      <Box
-        flex={1}
-        style={{
-          overflow: "auto",
-        }}
-      >
-        <CodeEditor
-          value={code}
-          width="100%"
-          height="100vh"
-          viewMode={colorMode}
-        />{" "}
-      </Box>{" "}
-    </Flex>
+    <CodeEditorProvider>
+      <Flex h="100vh" w="100vw">
+        <NavBar isNew/>
+        <Box
+          flex={1}
+          style={{
+            overflow: "auto",
+          }}
+        >
+          <CodeEditor data={pasteValue} width="100%" height="100vh" viewMode={colorMode} />
+        </Box>
+      </Flex>
+    </CodeEditorProvider>
   );
 }

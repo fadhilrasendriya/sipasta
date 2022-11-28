@@ -1,7 +1,6 @@
 import { VStack, Flex, Spacer, Divider, useColorMode } from "@chakra-ui/react";
 import {
   MdPostAdd,
-  MdQuestionAnswer,
   MdMenu,
   MdLogin,
   MdLightMode,
@@ -11,13 +10,50 @@ import {
 } from "react-icons/md";
 import { NavigationButton } from "src/components/NavBar/NavigationButton";
 import { createContext, useState } from "react";
+import { useRouter } from "next/router";
+import { useCodeEditorContext } from "src/contexts/CodeEditorContext";
 
 // export context to check navbar state and useState
 export const NavBarContext = createContext();
 
-export const NavBar = () => {
+export const NavBar = ({ isNew }) => {
   const { colorMode, toggleColorMode } = useColorMode();
+  const { value } = useCodeEditorContext();
+  const [isSaveLoading, setIsSaveLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
+
+  const moveToHome = () => {
+    router.push("/");
+  };
+
+  const createNewPaste = async () => {
+    setIsSaveLoading(true);
+    const res = await fetch(
+      `${process.env.BACKEND_URL}/api/collections/paste/records`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          text: value,
+        }),
+      }
+    );
+    const data = await res.json();
+    router.push(`/${data.id}`);
+  };
+
+  const moveToHomeWithExistingPaste = () => {
+    router.push({
+      pathname: "/",
+      query: {
+        pasteValue: value,
+      },
+    }, "/");
+  };
+
   return (
     <NavBarContext.Provider value={isOpen}>
       <Flex
@@ -39,10 +75,24 @@ export const NavBar = () => {
           </NavigationButton>
           <Divider />
           <VStack spacing={1} align="stretch">
-            <NavigationButton icon={<MdSave />}> Save Paste </NavigationButton>
-            <NavigationButton icon={<MdPostAdd />}>New Paste</NavigationButton>
-            <NavigationButton icon={<MdEdit />}> Edit Paste </NavigationButton>
-            <NavigationButton icon={<MdQuestionAnswer />}>FAQ</NavigationButton>
+            <NavigationButton
+              icon={<MdSave />}
+              isDisabled={!isNew}
+              onClick={createNewPaste}
+              isLoading={isSaveLoading}
+            >
+              {" "}
+              Save Paste{" "}
+            </NavigationButton>
+            <NavigationButton icon={<MdPostAdd />} onClick={moveToHome}>
+              New Paste
+            </NavigationButton>
+            <NavigationButton icon={<MdEdit />} isDisabled={isNew} onClick={
+              isNew ? moveToHome : moveToHomeWithExistingPaste
+            }>
+              {" "}
+              Edit Paste{" "}
+            </NavigationButton>
           </VStack>
         </VStack>
         <Spacer />

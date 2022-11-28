@@ -27,7 +27,6 @@ email: admin@sipaste.com
 password: @Sipaste123
 ```
 
-
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

@@ -11,13 +11,14 @@ app.use(
   })
 )
 
-app.get('/', (request, response) => {
-  response.json({ info: 'Node.js, Express, and Postgres API' })
+app.get('/ping', (request, response) => {
+  response.send("pong")
 })
 
-app.get('api/', db.getTexts);
-app.get('api/get/:id', db.getTextById)
-app.post('api/save', db.saveText);
+app.get('/api/texts', db.getTexts)
+app.get('/api/texts/get', db.getTextById)
+app.post('/api/texts/create', db.createText)
+app.post('/api/texts/save', db.saveText)
 
 app.listen(port, () => {
   console.log(`App running on port ${port}.`)

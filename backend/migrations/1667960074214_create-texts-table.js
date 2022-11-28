@@ -7,8 +7,9 @@ exports.up = pgm => {
         id: {
             type: 'varchar(50)',
             notNull: true,
+            primaryKey: true,
         },
-        userId: {
+        user_id: {
             type: 'varchar(50)',
             notNull: true,
           },
@@ -18,7 +19,9 @@ exports.up = pgm => {
         }
     })
     pgm.createIndex('texts', 'id')
-    pgm.createIndex('texts', 'userId')
+    pgm.createIndex('texts', ['id', 'user_id'])
 };
 
-exports.down = pgm => {};
+exports.down = pgm => {
+    pgm.dropTable('texts')
+};
