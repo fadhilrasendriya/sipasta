@@ -38,12 +38,8 @@ export const NavBarContext = createContext();
 export const NavBar = ({ isNew }) => {
   const { colorMode, toggleColorMode } = useColorMode();
   const { value } = useCodeEditorContext();
-<<<<<<< HEAD
   const [getId, setId] = useState();
   const { isOpen, onOpen, onClose } = useDisclosure();
-=======
-  const [ getId, setId ] = useState("");
->>>>>>> 0fdca99216090c19a8be5363856d53006417b86e
   const [isSaveLoading, setIsSaveLoading] = useState(false);
   const [isOpened, setisOpened] = useState(false);
   const router = useRouter();
@@ -69,7 +65,6 @@ export const NavBar = ({ isNew }) => {
 
   const createNewPaste = async () => {
     setIsSaveLoading(true);
-<<<<<<< HEAD
     try {
       const res = await fetch(
         `${process.env.BACKEND_URL}/api/texts/create`,
@@ -107,24 +102,6 @@ export const NavBar = ({ isNew }) => {
       })
     }
     setIsSaveLoading(false);
-=======
-    const res = await fetch(
-      `${process.env.BACKEND_URL}/api/texts/create`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "authorization" : localStorage.getItem("authorization")
-        },
-        body: JSON.stringify({
-          id: getId,
-          text: value,
-        }),
-      }
-    );
-    const data = await res.json();
-    router.push(`/${data.id}`);
->>>>>>> 0fdca99216090c19a8be5363856d53006417b86e
   };
 
   const moveToHomeWithExistingPaste = () => {
@@ -141,7 +118,6 @@ export const NavBar = ({ isNew }) => {
 
   return (
     <>
-<<<<<<< HEAD
       <NavBarContext.Provider value={isOpened}>
         <Flex
           direction="column"
@@ -153,27 +129,6 @@ export const NavBar = ({ isNew }) => {
             transition: "width 0.25s",
           }}
         >
-=======
-    <NavBarContext.Provider value={isOpen}>
-      <Flex
-        direction="column"
-        p={1}
-        bg="Menu"
-        h="100%"
-        style={{
-          width: isOpen ? "250px" : "56px",
-          transition: "width 0.25s",
-        }}
-      >
-        <VStack spacing={1} align="stretch">
-          <NavigationButton
-            onClick={() => setIsOpen(!isOpen)}
-            icon={<MdMenu />}
-          >
-            SiPasta
-          </NavigationButton>
-          <Divider />
->>>>>>> 0fdca99216090c19a8be5363856d53006417b86e
           <VStack spacing={1} align="stretch">
             <NavigationButton
               onClick={() => setisOpened(!isOpened)}
@@ -226,7 +181,6 @@ export const NavBar = ({ isNew }) => {
               {getToken() == null ? 'Login' : 'Logout'}
             </NavigationButton>
           </VStack>
-<<<<<<< HEAD
         </Flex>
       </NavBarContext.Provider>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -253,22 +207,6 @@ export const NavBar = ({ isNew }) => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-=======
-        </VStack>
-        <Spacer />
-        <VStack spacing={1} align="stretch">
-          <NavigationButton
-            icon={colorMode === "dark" ? <MdLightMode /> : <MdDarkMode />}
-            onClick={toggleColorMode}
-          >
-            {" "}
-            {colorMode === "dark" ? "Light Mode" : "Dark Mode"}{" "}
-          </NavigationButton>
-          <NavigationButton icon={<MdLogin />}>Login</NavigationButton>
-        </VStack>
-      </Flex>
-    </NavBarContext.Provider>
->>>>>>> 0fdca99216090c19a8be5363856d53006417b86e
     </>
   );
 };
