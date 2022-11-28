@@ -1,19 +1,16 @@
 const Pool = require('pg').Pool
 const generateId = require('./generator').generateId
 const getUserId = require('./firebase').getUserId
+require('dotenv').config()
 
 const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'postgres',
-  password: 'password',
-  port: 5432,
+  connectionString: process.env.DATABASE_URL,
 })
 
 const getTexts = (request, response) => {
     const userId = getUserId(request.headers['authorization']);
     if (userId === null) {
-        response.status(401)
+        response.status(401).json({'error': 'unauthorized'})
         return
     }
     pool.query('SELECT * FROM texts WHERE userId = $1 ORDER BY id ASC', [userId], (error, results) => {
@@ -27,8 +24,7 @@ const getTexts = (request, response) => {
 const getTextById = (request, response) => {
     const userId = getUserId(request.headers['authorization']);
     if (userId === null) {
-        response.status(401)
-        return
+        response.status(401).json({'error': 'unauthorized'})
     }
     pool.query('SELECT * FROM texts WHERE id = $1', [id], (error, results) => {
         if (error) {
@@ -44,7 +40,7 @@ const saveText = (request, response) => {
     const text = request.body.get("text");
 
     if (userId === null) {
-        response.status(401)
+        response.status(401).json({'error': 'unauthorized'})
         return
     }
 
@@ -58,7 +54,7 @@ const saveText = (request, response) => {
             if (error) {
                 throw error;
             } else if (results.rows[0].userId != userId) {
-                response.status(403)
+                response.status(403).json({'error': 'forbidden'})
                 return
             }
         })
