@@ -18,7 +18,6 @@ app.get('/ping', (request, response) => {
 app.get('/api/texts', db.getTexts)
 app.get('/api/texts/get', db.getTextById)
 app.post('/api/texts/create', db.createText)
-app.post('/api/texts/save', db.saveText)
 
 app.listen(port, () => {
   console.log(`App running on port ${port}.`)
