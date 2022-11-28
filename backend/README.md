@@ -4,7 +4,7 @@ Run using yarn (Node 16.13)
 
 To migrate
 ```
-yarn run migrate up
+yarn migrate up
 ```
 
 Don't forget to docker-compose up first for database.

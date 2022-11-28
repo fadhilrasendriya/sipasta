@@ -1,6 +1,6 @@
 const Pool = require('pg').Pool
 const generateId = require('./generator').generateId
-const getUserId = require('./firebase').getUserId
+const { isAuthorized, send401, send400 } = require('./util')
 require('dotenv').config()
 
 const pool = new Pool({
@@ -8,9 +8,9 @@ const pool = new Pool({
 })
 
 const getTexts = (request, response) => {
-    const userId = getUserId(request.headers['authorization']);
+    const userId = isAuthorized(request);
     if (userId === null) {
-        response.status(401).json({'error': 'unauthorized'})
+        send401(response);
         return
     }
     pool.query('SELECT * FROM texts WHERE user_id = $1 ORDER BY id ASC', [userId], (error, results) => {
@@ -22,9 +22,9 @@ const getTexts = (request, response) => {
 }
 
 const getTextById = (request, response) => {
-    const userId = getUserId(request.headers['authorization']);
-    if (userId === null) {
-        response.status(401).json({'error': 'unauthorized'})
+    const id = request.query.id;
+    if (id === undefined) {
+        send400(response);
         return
     }
     pool.query('SELECT * FROM texts WHERE id = $1', [id], (error, results) => {
@@ -36,15 +36,16 @@ const getTextById = (request, response) => {
 }
 
 const createText = (request, response) => {
-    const userId = getUserId(request.headers['authorization']);
-    if (userId === null) {
-        response.status(401).json({'error': 'unauthorized'})
+    const text = request.body["text"];
+    const userId = isAuthorized(request);
+    const id = userId ? request.body["id"] : generateId(10);
+    if (id == null) {
+        send400(response);
         return
     }
-    const id = generateId(10);
 
-    pool.query('INSERT INTO texts (id, user_id, text) VALUES ($1, $2, $3)', [id, userId, ''],
-    (error, results) => {
+    pool.query('INSERT INTO texts (id, user_id, text) VALUES ($1, $2, $3)', [id, userId, text],
+    (error) => {
         if (error) {
             throw error;
         }
@@ -52,43 +53,8 @@ const createText = (request, response) => {
     })
 }
 
-const saveText = (request, response) => {
-    var id = request.body["id"];
-    const userId = getUserId(request.headers['authorization']);
-    const text = request.body["text"];
-
-    if (userId === null) {
-        response.status(401).json({'error': 'unauthorized'})
-        return
-    }
-
-    if (id) {
-        pool.query('SELECT * FROM texts WHERE id = $1', [id], (error, results) => {
-            if (error) {
-                throw error;
-            } else if (results.rows.length == 0){
-                response.status(404).json({'error': 'Not found'})
-                return
-            } else if (results.rows[0].user_id != userId) {
-                response.status(403).json({'error': 'forbidden'})
-                return
-            }
-            pool.query('UPDATE texts SET text = $3 WHERE id = $1 AND user_id = $2', [id, userId, text], (error, results) => {
-                if (error) {
-                    throw error;
-                }
-                response.status(200).json({'id': id})
-            })
-        }) 
-    } else {
-        response.status(400).json({'error': 'bad request'})
-    }
-    
-}
-
 module.exports = {
     getTexts,
     getTextById,
-    createText,
-    saveText
+    createText
 }
