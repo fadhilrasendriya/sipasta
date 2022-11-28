@@ -13,11 +13,11 @@ const getTexts = (request, response) => {
         response.status(401).json({'error': 'unauthorized'})
         return
     }
-    pool.query('SELECT * FROM texts WHERE userId = $1 ORDER BY id ASC', [userId], (error, results) => {
+    pool.query('SELECT * FROM texts WHERE user_id = $1 ORDER BY id ASC', [userId], (error, results) => {
       if (error) {
         throw error
       }
-      response.status(200).json(results.rows)
+      response.status(200).json({'data': results.rows})
     })
 }
 
@@ -30,57 +30,62 @@ const getTextById = (request, response) => {
         if (error) {
             throw error;
         }
-        response.status(200).json(results.rows[0])
+        response.status(200).json({'data': results.rows[0]})
+    })
+}
+
+const createText = (request, response) => {
+    const userId = getUserId(request.headers['authorization']);
+    if (userId === null) {
+        response.status(401).json({'error': 'unauthorized'})
+    }
+    const id = generateId(10);
+
+    pool.query('INSERT INTO texts (id, user_id, text) VALUES ($1, $2, $3)', [id, userId, ''],
+    (error, results) => {
+        if (error) {
+            throw error;
+        }
+        response.status(200).json({'id': id})
     })
 }
 
 const saveText = (request, response) => {
-    const id = request.body.get("id");
+    var id = request.body["id"];
     const userId = getUserId(request.headers['authorization']);
-    const text = request.body.get("text");
+    const text = request.body["text"];
 
     if (userId === null) {
         response.status(401).json({'error': 'unauthorized'})
-        return
     }
 
-    if (!(id && checkId(id))) {
-        id = generateId(10);
-        while(checkId(id)) {
-            id = generateId(10);
-        }
-    } else {
+    if (id) {
         pool.query('SELECT * FROM texts WHERE id = $1', [id], (error, results) => {
             if (error) {
                 throw error;
-            } else if (results.rows[0].userId != userId) {
+            } else if (results.rows.length == 0){
+                response.status(404).json({'error': 'Not found'})
+                return
+            } else if (results.rows[0].user_id != userId) {
                 response.status(403).json({'error': 'forbidden'})
                 return
             }
-        })
+            pool.query('UPDATE texts SET text = $3 WHERE id = $1 AND user_id = $2', [id, userId, text], (error, results) => {
+                if (error) {
+                    throw error;
+                }
+                response.status(200).json({'id': id})
+            })
+        }) 
+    } else {
+        response.status(400).json({'error': 'bad request'})
     }
-
-    pool.query('INSERT INTO texts (id, userId, text) VALUES ($1, $2, $3) ON CONFLICT (id) DO UPDATE' [id, userId, text],
-    (error, results) => {
-        if (error) {
-            throw error;
-        }
-        response.status(200)
-    })
-}
-
-const checkId = (id) => {
-    pool.query('SELECT EXISTS (SELECT 1 FROM texts WHERE id = $1)', [id],
-    (error, results) => {
-        if (error) {
-            throw error;
-        }
-        return results.rows[0]
-    })
+    
 }
 
 module.exports = {
     getTexts,
     getTextById,
+    createText,
     saveText
 }
