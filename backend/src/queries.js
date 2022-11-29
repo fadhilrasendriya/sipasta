@@ -35,9 +35,11 @@ const getTextById = (request, response) => {
     })
 }
 
-const createText = (request, response) => {
+const createText = async (request, response) => {
     const text = request.body["text"];
-    const userId = isAuthorized(request);
+    const decoded = await isAuthorized(request);
+    const userId = await decoded.uid;
+
     const id = userId ? request.body["id"] : generateId(10);
     if (id == null) {
         send400(response);

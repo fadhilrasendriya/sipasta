@@ -11,19 +11,12 @@ admin.initializeApp({
   })
 });
 
-const getUserId = (userToken) => {
+const getUserId = async (userToken) => {
   if (userToken === undefined) {
     return null;
   }
 
-  getAuth()
-    .verifyIdToken(userToken)
-    .then((decodedToken) => {
-      return decodedToken.uid;
-  })
-  .catch((error) => {
-    console.log(error);
-  });
+  return await getAuth().verifyIdToken(userToken);
 }
 
 module.exports = {

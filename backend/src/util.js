@@ -1,7 +1,7 @@
 const getUserId = require('./firebase').getUserId
 
-const isAuthorized = (request) => {
-  return getUserId(request.headers['authorization']);
+const isAuthorized = async (request) => {
+  return await getUserId(request.headers['authorization']);
 }
 
 const send401 = (response) => {
