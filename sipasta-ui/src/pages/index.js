@@ -14,15 +14,20 @@ export default function Home() {
   } = router
   return (
     <CodeEditorProvider>
-      <Flex h="100vh" w="100vw">
+      <Flex h="100vh" w="100vw" style={{
+        backgroundImage: `url("/rpk-bg.png")`,
+        backgroundSize: "cover"
+      }
+      }>
         <NavBar isNew/>
         <Box
           flex={1}
           style={{
             overflow: "auto",
+            opacity: colorMode === "light" ? 1 : 0.9,
           }}
         >
-          <CodeEditor data={pasteValue} width="100%" height="100vh" viewMode={colorMode} />
+          <CodeEditor data={pasteValue} width="100%" height="100vh" viewMode={colorMode}/>
         </Box>
       </Flex>
     </CodeEditorProvider>
