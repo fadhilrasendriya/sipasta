@@ -41,6 +41,7 @@ services:
     container_name: nodejs_container
     restart: always
     environment:
+      - FRONTEND_URL=$FRONTEND_URL
       - DATABASE_URL=$DATABASE_URL
       - FIREBASE_PROJECT_ID=$FIREBASE_PROJECT_ID
       - FIREBASE_CLIENT_EMAIL=FIREBASE_CLIENT_EMAIL

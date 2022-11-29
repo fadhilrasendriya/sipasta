@@ -12,22 +12,21 @@ const app = initializeApp(firebaseConfig);
 const provider = new GoogleAuthProvider();
 const auth = getAuth();
 
-export const accessTokenKey = "accessToken"
+export const idTokenKey = "idToken"
 
 export async function signIn() {
-    const res = await signInWithPopup(auth, provider);
-    const credential = GoogleAuthProvider.credentialFromResult(res);
-    const token = credential.accessToken;
-    localStorage.setItem(accessTokenKey, token);
+    await signInWithPopup(auth, provider);
+    const token = await auth.currentUser.getIdToken();
+    localStorage.setItem(idTokenKey, token);
 }
 
 export function signOut() {
-    localStorage.removeItem(accessTokenKey);
+    localStorage.removeItem(idTokenKey);
 }
 
 export const getToken = () => {
     if (typeof window !== 'undefined') {
-        return localStorage.getItem(accessTokenKey);
+        return localStorage.getItem(idTokenKey);
     }
     return null;
 }

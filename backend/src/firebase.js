@@ -22,7 +22,7 @@ const getUserId = (userToken) => {
       return decodedToken.uid;
   })
   .catch((error) => {
-    return null
+    console.log(error);
   });
 }
 

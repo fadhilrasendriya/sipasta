@@ -32,7 +32,7 @@ export default function Home({data}) {
             overflow: "auto",
           }}
         >
-          <CodeEditor editable={false} data={data?.text} width="100%" height="100vh" viewMode={colorMode} />
+          <CodeEditor editable={false} data={data?.data.text} width="100%" height="100vh" viewMode={colorMode} />
         </Box>
       </Flex>
     </CodeEditorProvider>

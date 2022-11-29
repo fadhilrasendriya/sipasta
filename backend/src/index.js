@@ -2,9 +2,17 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const app = express()
 const db = require('./queries')
+var cors = require('cors')
+require('dotenv').config()
 const port = 8080
 
+var corsOptions = {
+  origin: process.env.FRONTEND_URL,
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+
 app.use(bodyParser.json())
+app.use(cors())
 app.use(
   bodyParser.urlencoded({
     extended: true,
