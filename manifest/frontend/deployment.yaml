@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sipasta-ui
+spec:
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: sipasta-ui
+  template:
+    metadata:
+      labels:
+        app: sipasta-ui
+    spec:
+      containers:
+        - name: sipasta-ui
+          image: hori75/sipasta-ui:latest
+          envFrom:
+            - configMapRef:
+                name: sipasta-ui
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 20
+          readinessProbe:
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            httpGet:
+              path: /ping
+              port: http
+          resources:
+            limits:
+              memory: 2048Mi
+              cpu: 250m

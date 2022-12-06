@@ -1,0 +1,13 @@
+resources:
+  - deployment.yaml
+  - service.yaml
+  - hpa.yaml
+
+configMapGenerator:
+  - name: sipasta-ui
+    literals:
+      - BACKEND_URL=http://127.0.0.1
+      - PROJECT_ID=sipasta
+      - AUTH_DOMAIN=sipasta.firebaseapp.com
+      - API_KEY=AIzaSyA6_Q_OLEFzirQ9QvyA0saGbw7uDth83lw
+    
