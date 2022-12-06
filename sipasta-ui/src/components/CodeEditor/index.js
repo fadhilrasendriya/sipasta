@@ -10,7 +10,7 @@ export const CodeEditor = ({viewMode, data, ...props}) => {
 
   useEffect(() => {
     setValue(data);
-  }, [data]);
+  }, [data, setValue]);
 
   return (
     <CodeMirror
