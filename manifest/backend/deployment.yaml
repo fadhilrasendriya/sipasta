@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sipasta-backend
+spec:
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: sipasta-backend
+  template:
+    metadata:
+      labels:
+        app: sipasta-backend
+    spec:
+      containers:
+        - name: sipasta-backend
+          image: "hub.docker.com/repository/docker/hori75/sipasta-backend"
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: DATABASE_URL
+            - name: FIREBASE_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: FIREBASE_PRIVATE_KEY
+                  name: backend-secret
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 20
+          readinessProbe:
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            httpGet:
+              path: /ping
+              port: http
+          resources:
+            limits:
+              memory: 2048Mi
+              cpu: 250m
