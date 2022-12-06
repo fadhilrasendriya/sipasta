@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: sipasta-backend
-          image: "hub.docker.com/repository/docker/hori75/sipasta-backend"
+          image: hub.docker.com/repository/docker/hori75/sipasta-backend:latest
           env:
             - name: DATABASE_URL
               valueFrom:
