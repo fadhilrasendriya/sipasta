@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sipasta-backend
+spec:
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: sipasta-backend
+    spec:
+      containers:
+        - name: sipasta-backend
+          image: "hub.docker.com/repository/docker/hori75/sipasta-backend"
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 20
+          readinessProbe:
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            httpGet:
+              path: /ping
+              port: http

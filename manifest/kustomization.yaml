@@ -1,0 +1,11 @@
+resources:
+  - deployment.yaml
+  - service.yaml
+  - hpa.yaml
+
+configMapGenerator:
+  - name: sipasta-backend
+    literals:
+      - FRONTEND_URL=http://localhost:3000
+      - FIREBASE_PROJECT_ID=sipasta
+      - FIREBASE_CLIENT_EMAIL=firebase-adminsdk-km6f9@sipasta.iam.gserviceaccount.com
