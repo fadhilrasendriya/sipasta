@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: sipasta-backend
-          image: hub.docker.com/repository/docker/hori75/sipasta-backend:latest
+          image: hori75/sipasta-backend:latest
           env:
             - name: DATABASE_URL
               valueFrom:
@@ -26,6 +26,9 @@ spec:
                 secretKeyRef:
                   key: FIREBASE_PRIVATE_KEY
                   name: backend-secret
+          envFrom:
+            - configMapRef:
+                name: sipasta-backend
           ports:
             - name: http
               containerPort: 8080
