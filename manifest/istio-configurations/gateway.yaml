@@ -1,0 +1,20 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: sipasta-gateway
+spec:
+  selector:
+    istio: ingressgateway # use Istio default gateway implementation
+  servers:
+  - port:
+      number: 80
+      name: sipasta-backend
+      protocol: HTTP
+    hosts:
+    - "api.sipasta.rpksus.xyz"
+  - port:
+      number: 80
+      name: sipasta-ui
+      protocol: HTTP
+    hosts:
+    - "sipasta.rpksus.xyz"

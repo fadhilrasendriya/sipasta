@@ -1,0 +1,4 @@
+resources:
+  - gateway.yaml
+  - sipasta-backend-vs.yaml
+  - sipasta-ui-vs.yaml
