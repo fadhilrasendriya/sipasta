@@ -16,7 +16,11 @@ const getUserId = async (userToken) => {
     return null;
   }
 
-  return await getAuth().verifyIdToken(userToken);
+  try {
+    return await getAuth().verifyIdToken(userToken);
+  } catch(err) {
+    return null;
+  }
 }
 
 module.exports = {
