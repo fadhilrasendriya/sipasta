@@ -6,7 +6,7 @@ resources:
 configMapGenerator:
   - name: sipasta-backend
     literals:
-      - FRONTEND_URL=http://sipasta.rpksus.xyz
+      - FRONTEND_URL=https://sipasta.rpksus.xyz
       - FIREBASE_PROJECT_ID=sipasta
       - FIREBASE_CLIENT_EMAIL=firebase-adminsdk-km6f9@sipasta.iam.gserviceaccount.com
     
