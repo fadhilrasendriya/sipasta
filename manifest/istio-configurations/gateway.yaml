@@ -18,15 +18,3 @@ spec:
       protocol: HTTP
     hosts:
     - "sipasta.rpksus.xyz"
-  - port:
-      number: 443
-      name: sipasta-backend
-      protocol: HTTPS
-    hosts:
-    - "api.sipasta.rpksus.xyz"
-  - port:
-      number: 443
-      name: sipasta-ui
-      protocol: HTTPS
-    hosts:
-    - "sipasta.rpksus.xyz"
