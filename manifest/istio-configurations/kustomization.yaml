@@ -3,3 +3,4 @@ resources:
   - sipasta-backend-vs.yaml
   - sipasta-ui-vs.yaml
   - kiali-ui-vs.yaml
+  - grafana-vs.yaml

@@ -24,3 +24,9 @@ spec:
       protocol: HTTP
     hosts:
     - "kiali.internal.sipasta.rpksus.xyz"
+  - port:
+      number: 80
+      name: grafana-ui
+      protocol: HTTP
+    hosts:
+    - "grafana.internal.sipasta.rpksus.xyz"
