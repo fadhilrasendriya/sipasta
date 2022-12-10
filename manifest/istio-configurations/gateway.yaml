@@ -18,3 +18,9 @@ spec:
       protocol: HTTP
     hosts:
     - "sipasta.rpksus.xyz"
+  - port:
+      number: 80
+      name: kiali-ui
+      protocol: HTTP
+    hosts:
+    - "kiali.internal.sipasta.rpksus.xyz"
