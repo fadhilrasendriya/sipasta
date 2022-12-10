@@ -2,3 +2,4 @@ resources:
   - gateway.yaml
   - sipasta-backend-vs.yaml
   - sipasta-ui-vs.yaml
+  - kiali-ui-vs.yaml
