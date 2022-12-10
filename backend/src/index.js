@@ -19,6 +19,8 @@ app.use(
   })
 )
 
+app.options('*', cors(corsOptions))
+
 app.get('/ping', (request, response) => {
   response.send("pong")
 })
