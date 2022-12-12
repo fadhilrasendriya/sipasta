@@ -5,6 +5,9 @@ const db = require('./queries')
 var cors = require('cors')
 require('dotenv').config()
 const port = 8080
+const {collectDefaultMetrics, register } = require('prom-client');
+
+collectDefaultMetrics();
 
 var corsOptions = {
   origin: process.env.FRONTEND_URL,
@@ -18,6 +21,15 @@ app.use(
     extended: true,
   })
 )
+
+app.get('/metrics', async (_req, res) => {
+  try {
+    res.set('Content-Type', register.contentType);
+    res.end(await register.metrics());
+  } catch (err) {
+    res.status(500).end(err);
+  }
+})
 
 app.options('*', cors(corsOptions))
 
